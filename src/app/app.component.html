@@ -1,0 +1,20 @@
+<!-- File: cms-dashboard/src/app/app.component.html -->
+<!-- This is the main layout of the CMS Dashboard application. It includes a sidebar for navigation and a main content area for displaying routed components. -->
+<!-- The sidebar contains links to different sections of the dashboard, such as Home, Churches, Users, and Roles. -->
+<div style="display: flex; height: 100vh;">
+  <!-- Left Sidebar -->
+  <nav class="sidebar" style="width: 220px; background: #f0f0f0; padding: 1rem;">
+    <h3>Dashboard</h3>
+    <ul style="list-style: none; padding: 0;">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Home</a></li>
+      <li><a routerLink="/churches" routerLinkActive="active">Churches</a></li>
+      <li><a routerLink="/users" routerLinkActive="active">Users</a></li>
+      <li><a routerLink="/roles" routerLinkActive="active">Roles</a></li>
+    </ul>
+  </nav>
+
+  <!-- Routed Content -->
+  <main style="flex: 1; padding: 1rem;">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,15 @@
+<p>church-list works!</p>
+<div class="filter-container">
+  <input [(ngModel)]="city" placeholder="Enter City" />
+  <input [(ngModel)]="state" placeholder="Enter State" />
+  <button (click)="loadChurches()">Load Churches</button>
+</div>
+
+<div *ngIf="churches && churches.length > 0">
+  <label>Select Church</label>
+  <select [(ngModel)]="selectedChurchId">
+    <option *ngFor="let church of churches" [value]="church.id">{{ church.name }}</option>
+  </select>
+
+  <button (click)="approve()">Approve</button>
+</div>
