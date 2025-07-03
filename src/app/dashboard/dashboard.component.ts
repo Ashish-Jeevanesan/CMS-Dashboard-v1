@@ -15,12 +15,12 @@ export class DashboardComponent {
   churches: Church[] = [];
   selectedChurchId!: number;
 
-  constructor(private churchService: ChurchService) {}
+  constructor() {}
 
-loadChurches() {
-    this.churchService.getChurches(this.city, this.state).subscribe(data => {
-      this.churches = data;
-    });
-  }
+// loadChurches() {
+//     this.churchService.getChurches(this.city, this.state).subscribe(data => {
+//       this.churches = data;
+//     });
+//   }
 
 }

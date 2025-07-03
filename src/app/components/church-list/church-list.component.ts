@@ -19,14 +19,19 @@ city = '';
   constructor(private churchService: ChurchService) {}
 
   loadChurches() {
-    this.churchService.getChurches(this.city, this.state).subscribe(data => {
+    const payload = {
+      city: this.city,
+      state: this.state
+    };
+    console.log('payload--> ', payload);
+    this.churchService.getChurches(payload).subscribe(data => {
       this.churches = data;
     });
   }
 
-  approve() {
-    if (this.selectedChurchId) {
-      this.churchService.approveChurch(this.selectedChurchId).subscribe(() => {
+  approve(churchId: number) {
+    if (churchId) {
+      this.churchService.approveChurch(churchId).subscribe(() => {
         alert('Church approved successfully!');
       });
     }

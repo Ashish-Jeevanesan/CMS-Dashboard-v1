@@ -4,19 +4,23 @@ import { Observable } from 'rxjs';
 
 
 export interface Church {
-churchName: any;
+  name: any;
   id: number;
-  name: string;
+  city: string;
+  state: string;
+  country: string;
+  status: string;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChurchService {
-  private baseUrl = 'http://localhost:8080';
-  constructor(private http: HttpClient) { }
+  private baseUrl = 'http://localhost:9000';
+  constructor(private http: HttpClient) {}
 
-  getChurches(city: string, state: string): Observable<Church[]> {
-    return this.http.post<Church[]>(`${this.baseUrl}/list`, { city, state });
+  getChurches(payload: { city: string; state: string }): Observable<Church[]> {
+    return this.http.post<Church[]>(`${this.baseUrl}/api/getChurch`, { payload });
   }
 
   approveChurch(churchId: number): Observable<any> {

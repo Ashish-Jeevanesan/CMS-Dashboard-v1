@@ -1,4 +1,3 @@
-<p>church-list works!</p>
 <div class="filter-container">
   <input [(ngModel)]="city" placeholder="Enter City" />
   <input [(ngModel)]="state" placeholder="Enter State" />
@@ -6,10 +5,30 @@
 </div>
 
 <div *ngIf="churches && churches.length > 0">
-  <label>Select Church</label>
-  <select [(ngModel)]="selectedChurchId">
-    <option *ngFor="let church of churches" [value]="church.id">{{ church.name }}</option>
-  </select>
-
-  <button (click)="approve()">Approve</button>
+  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; margin-top: 1rem;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Country</th>
+        <th>Status</th>
+        <th>Approve</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let church of churches">
+        <td>{{ church.id }}</td>
+        <td>{{ church.name }}</td>
+        <td>{{ church.city }}</td>
+        <td>{{ church.state }}</td>
+        <td>{{ church.country }}</td>
+        <td>{{ church.status }}</td>
+        <td>
+          <button (click)="approve(church.id)">Approve</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
