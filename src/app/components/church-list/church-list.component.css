@@ -1,0 +1,201 @@
+.church-list-container {
+  width: 100%;
+  max-width: 1200px; /* Increased max width */
+  margin-left: 0;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  background: #f4f8ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 60, 180, 0.08);
+  padding: 2rem;
+  /* Responsive padding */
+  box-sizing: border-box;
+}
+
+.title {
+  color: #1565c0;
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.church-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow-x: auto;
+  display: block; /* Makes table scrollable on small screens */
+}
+
+.church-table th, .church-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e3eafc;
+  min-width: 120px; /* Ensures columns don't shrink too much */
+}
+
+.church-table th {
+  background: #e3eafc;
+  color: #1565c0;
+}
+
+.approved {
+  color: #1565c0;
+  font-weight: bold;
+}
+
+.pending {
+  color: #f57c00;
+  font-weight: bold;
+}
+
+.approve-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.approve-btn:hover {
+  background: #1565c0;
+}
+
+.loading {
+  text-align: left;
+  color: #1976d2;
+  margin-bottom: 1rem;
+}
+
+.main-header {
+  background: #1565c0;
+  color: #fff;
+  padding: 1rem 2rem;
+  text-align: left;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.main-footer {
+  background: #1565c0;
+  color: #fff;
+  text-align: center;
+  padding: 0.75rem;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.main-layout {
+  display: flex;
+  min-height: calc(100vh - 110px);
+}
+
+.sidebar {
+  width: 200px;
+  background: #e3eafc;
+  padding: 2rem 1rem;
+  min-height: 100%;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 1.5rem;
+}
+
+.sidebar a {
+  color: #1565c0;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  display: block;
+  transition: background 0.2s;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.filter-container {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start; /* Aligns search to the left */
+}
+
+.filter-container input {
+  padding: 0.5rem;
+  border: 1px solid #b3c6e6;
+  border-radius: 6px;
+  width: 180px;
+}
+
+.filter-container button {
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-container button:hover {
+  background: #1565c0;
+}
+
+.rollback-btn {
+  background: #f57c00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-left: 0
+  transition: background 0.2s;
+}
+
+.rollback-btn:hover {
+  background: #c25a00;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .church-list-container {
+    max-width: 100%;
+    padding: 1rem;
+  }
+  .church-table th, .church-table td {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.95rem;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 600px) {
+  .church-list-container {
+    padding: 0.5rem;
+  }
+  .title {
+    font-size: 1.2rem;
+  }
+  .church-table th, .church-table td {
+    font-size: 0.85rem;
+    min-width: 70px;
+  }
+}

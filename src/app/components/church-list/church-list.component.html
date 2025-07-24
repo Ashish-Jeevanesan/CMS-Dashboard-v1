@@ -1,32 +1,47 @@
 <div class="filter-container">
   <input [(ngModel)]="city" placeholder="Enter City" />
   <input [(ngModel)]="state" placeholder="Enter State" />
-  <button (click)="loadChurches()">Load Churches</button>
+  <button (click)="fetchChurches()">Load Churches</button>
 </div>
 
-<div *ngIf="churches && churches.length > 0">
-  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; margin-top: 1rem;">
+<div class="church-list-container">
+  <h2 class="title">Churches</h2>
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <table class="church-table">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Name</th>
         <th>City</th>
         <th>State</th>
         <th>Country</th>
         <th>Status</th>
-        <th>Approve</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let church of churches">
-        <td>{{ church.id }}</td>
         <td>{{ church.name }}</td>
         <td>{{ church.city }}</td>
         <td>{{ church.state }}</td>
         <td>{{ church.country }}</td>
-        <td>{{ church.status }}</td>
         <td>
-          <button (click)="approve(church.id)">Approve</button>
+          <span [ngClass]="church.status === 'Approved' ? 'approved' : 'pending'">
+            {{ church.status === 'Approved' ? 'Approved' : 'Pending Approval' }}
+          </span>
+        </td>
+        <td>
+          <button
+            *ngIf="church.status !== 'Approved'"
+            (click)="approveChurch(church.id, 'Approved')"
+            class="approve-btn">
+            Approve
+          </button>
+          <button
+            *ngIf="church.status === 'Approved'"
+            (click)="approveChurch(church.id, 'Pending Approval')"
+            class="rollback-btn">
+            Rollback
+          </button>
         </td>
       </tr>
     </tbody>

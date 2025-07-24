@@ -6,3 +6,28 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.main-header {
+  background: #1565c0;
+  color: #fff;
+  padding: 1rem 2rem;
+  text-align: left;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.main-footer {
+  background: #1565c0;
+  color: #fff;
+  text-align: center;
+  padding: 0.75rem;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.main-layout {
+  min-height: calc(100vh - 110px);
+  padding-bottom: 2rem;
+}
