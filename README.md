@@ -1,27 +1,54 @@
-# CmsDashboard
+# ⛪ CMS Dashboard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.4.
+<p align="center">
+  <img src="https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white" alt="Angular"/>
+  <img src="https://img.shields.io/badge/supabase-%233ECF8E.svg?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
+  <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"/>
+</p>
 
-## Development server
+## 📖 About The Project
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+A simple dashboard for managing content for a church. This project is built with Angular and uses Supabase for the backend.
 
-## Code scaffolding
+## ✨ Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+*   **User Authentication:** 🔐 Users can sign up and log in to the dashboard.
+*   **Church Management:** ⛪ Authenticated users can add, edit, and delete church information.
+*   **Dashboard:** 📊 A dashboard to display a list of churches.
 
-## Build
+## 🚀 Getting Started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+To get a local copy up and running follow these simple example steps.
 
-## Running unit tests
+### Prerequisites
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+*   Node.js and npm
+*   Angular CLI
 
-## Running end-to-end tests
+### Installation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1.  Clone the repo
+    ```sh
+    git clone https://github.com/your_username_/Project-Name.git
+    ```
+2.  Install NPM packages
+    ```sh
+    npm install
+    ```
+3.  Create a `.env` file in the root of the project and add your Supabase URL and anon key.
+    ```
+    SUPABASE_URL=YOUR_SUPABASE_URL
+    SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
+    ```
+4.  Start the development server
+    ```sh
+    npm start
+    ```
 
-## Further help
+## ✍️ Author
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+*   **Ashish Jeevanesan**
+
+## 🤝 Contributors
+
+This project is maintained by the **CMS group**.
