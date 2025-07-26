@@ -1,1 +1,47 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <h2>Dashboard Overview</h2>
+  
+  <div *ngIf="loading" class="loading">Loading dashboard data...</div>
+  
+  <div *ngIf="!loading" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Churches</h3>
+        <p class="stat-number">{{ stats.totalChurches }}</p>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Approved Churches</h3>
+        <p class="stat-number approved">{{ stats.approvedChurches }}</p>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Pending Approval</h3>
+        <p class="stat-number pending">{{ stats.pendingChurches }}</p>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Total Users</h3>
+        <p class="stat-number">{{ stats.totalUsers }}</p>
+      </div>
+    </div>
+
+    <!-- Recent Churches -->
+    <div class="recent-section">
+      <h3>Recent Churches</h3>
+      <div *ngIf="churches.length > 0" class="recent-list">
+        <div *ngFor="let church of churches.slice(0, 5)" class="recent-item">
+          <span class="church-name">{{ church.name }}</span>
+          <span class="church-location">{{ church.city }}, {{ church.state }}</span>
+          <span [ngClass]="church.status === 'Approved' ? 'status-approved' : 'status-pending'">
+            {{ church.status }}
+          </span>
+        </div>
+      </div>
+      <div *ngIf="churches.length === 0" class="no-data">
+        No churches found.
+      </div>
+    </div>
+  </div>
+</div>

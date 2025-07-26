@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { User, UserService } from '../services/user.service';
 
 @Component({
@@ -9,18 +9,35 @@ import { User, UserService } from '../services/user.service';
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css']
 })
-export class UserDashboardComponent {
-users: User[] = [];
-private userService = inject(UserService);
-//constructor(private userService: UserService) {}
+export class UserDashboardComponent implements OnInit {
+  users: User[] = [];
+  loading = false;
+  errorMessage: string | null = null;
+  private userService = inject(UserService);
 
-ngOnInit() {
-  this.loadUsers();
-}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-loadUsers() {
-  this.userService.getUsers().subscribe(data => {
-    this.users = data;
-  });
-}
+  ngOnInit() {
+    // Only load data in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadUsers();
+    }
+  }
+
+  loadUsers() {
+    this.loading = true;
+    this.errorMessage = null;
+    
+    this.userService.getUsers().subscribe({
+      next: (data: User[]) => {
+        this.users = data;
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Error loading users:', error);
+        this.errorMessage = 'Failed to load users. Please try again.';
+        this.loading = false;
+      }
+    });
+  }
 }

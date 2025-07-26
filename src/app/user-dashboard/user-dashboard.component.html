@@ -1,26 +1,43 @@
-<div>
-  <h2>User List</h2>
-  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; margin-top: 1rem;" *ngIf="users.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User Name</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.userId }}</td>
-        <td>{{ user.userName }}</td>
-        <td>{{ user.userFName }}</td>
-        <td>{{ user.userLName }}</td>
-        <td>{{ user.userEmail }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="users.length === 0">
-    No users found.
+<div class="user-dashboard-container">
+  <h2>User Management</h2>
+  
+  <div *ngIf="loading" class="loading">Loading users...</div>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+    <button (click)="loadUsers()" class="retry-btn">Retry</button>
+  </div>
+  
+  <div *ngIf="!loading && !errorMessage">
+    <table class="user-table" *ngIf="users.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Name</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.userId }}</td>
+          <td>{{ user.userName }}</td>
+          <td>{{ user.userFName }}</td>
+          <td>{{ user.userLName || 'N/A' }}</td>
+          <td>{{ user.userEmail }}</td>
+          <td>
+            <span [ngClass]="user.role?.roleName === 'ADMIN' ? 'role-admin' : 'role-user'">
+              {{ user.role?.roleName || 'No Role' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="users.length === 0 && !loading" class="no-data">
+      No users found.
+    </div>
   </div>
 </div>

@@ -35,10 +35,20 @@ To get a local copy up and running follow these simple example steps.
     ```sh
     npm install
     ```
-3.  Create a `.env` file in the root of the project and add your Supabase URL and anon key.
+3.  **Environment Configuration:**
+    
+    **For Development:**
+    - The app uses the credentials in [`src/environments/environment.ts`](src/environments/environment.ts)
+    - Replace the default Supabase URL and key with your own credentials
+    
+    **For Production:**
+    - Update [`src/environments/environment.prod.ts`](src/environments/environment.prod.ts) with your production credentials
+    - Use Angular's environment file replacement during build process
+    
+    **Optional:** You can also create a `.env` file for documentation purposes:
     ```
-    SUPABASE_URL=YOUR_SUPABASE_URL
-    SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
+    SUPABASE_URL=your_supabase_project_url_here
+    SUPABASE_ANON_KEY=your_supabase_anon_key_here
     ```
 4.  Start the development server
     ```sh

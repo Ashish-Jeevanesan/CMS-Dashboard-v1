@@ -30,18 +30,25 @@
           </span>
         </td>
         <td>
-          <button
-            *ngIf="church.status !== 'Approved'"
-            (click)="approveChurch(church.id, 'Approved')"
-            class="approve-btn">
-            Approve
-          </button>
-          <button
-            *ngIf="church.status === 'Approved'"
-            (click)="approveChurch(church.id, 'Pending Approval')"
-            class="rollback-btn">
-            Rollback
-          </button>
+          <div *ngIf="canManageChurches(); else noPermission">
+            <button
+              *ngIf="church.status !== 'Approved'"
+              (click)="approveChurch(church.id, 'Approved')"
+              class="approve-btn"
+              [disabled]="loading">
+              {{ loading ? 'Processing...' : 'Approve' }}
+            </button>
+            <button
+              *ngIf="church.status === 'Approved'"
+              (click)="approveChurch(church.id, 'Pending Approval')"
+              class="rollback-btn"
+              [disabled]="loading">
+              {{ loading ? 'Processing...' : 'Rollback' }}
+            </button>
+          </div>
+          <ng-template #noPermission>
+            <span class="no-permission">Admin Only</span>
+          </ng-template>
         </td>
       </tr>
     </tbody>

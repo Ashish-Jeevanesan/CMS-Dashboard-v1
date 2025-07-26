@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { ChurchService, Church } from '../../services/church.service';
+import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-church-list',
@@ -17,10 +18,17 @@ export class ChurchListComponent implements OnInit {
   selectedChurchId!: number;
   loading = false;
 
-  constructor(private churchService: ChurchService) {}
+  constructor(
+    private churchService: ChurchService,
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit() {
-    this.fetchChurches();
+    // Only fetch data in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      this.fetchChurches();
+    }
   }
 
   async fetchChurches() {
@@ -59,9 +67,45 @@ export class ChurchListComponent implements OnInit {
   //   }
   // }
 
+  // Check if current user can manage churches
+  canManageChurches(): boolean {
+    return this.authService.canManageChurches();
+  }
+
+  // Check if current user is admin
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  // Get current user info for display
+  getCurrentUser() {
+    return this.authService.getCurrentUser();
+  }
+
   async approveChurch(id: number, status: string) {
-    await this.churchService.approveChurch(id, status);
-    const church = this.churches.find(c => c.id === id);
-    if (church) church.status = status;
+    // Check permissions before allowing action
+    if (!this.canManageChurches()) {
+      alert('You do not have permission to manage churches. Only ADMIN users can approve or rollback churches.');
+      return;
+    }
+
+    try {
+      this.loading = true;
+      await this.churchService.approveChurch(id, status);
+      const church = this.churches.find(c => c.id === id);
+      if (church) {
+        church.status = status;
+      }
+      console.log(`Church ${id} status updated to ${status} by ${this.getCurrentUser()?.role?.roleName} user`);
+      
+      // Show success message
+      const action = status === 'Approved' ? 'approved' : 'rolled back';
+      alert(`Church successfully ${action}!`);
+    } catch (error) {
+      console.error('Error updating church status:', error);
+      alert('Failed to update church status. Please try again.');
+    } finally {
+      this.loading = false;
+    }
   }
 }

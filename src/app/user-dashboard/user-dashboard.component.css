@@ -1,0 +1,192 @@
+/* User Dashboard Component Styles */
+
+.user-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-dashboard-container h2 {
+  margin-bottom: 2rem;
+  color: #343a40;
+  font-weight: 600;
+  font-size: 1.75rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.retry-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+  background-color: #c82333;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-table th,
+.user-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.user-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.user-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.user-table tbody tr:nth-child(even):hover {
+  background-color: #f0f0f0;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  font-style: italic;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Role styling */
+.role-admin {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.role-user {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .user-table {
+    font-size: 0.875rem;
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .error-message {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .retry-btn {
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-dashboard-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Stack table cells on very small screens */
+  .user-table,
+  .user-table thead,
+  .user-table tbody,
+  .user-table th,
+  .user-table td,
+  .user-table tr {
+    display: block;
+  }
+  
+  .user-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  .user-table tr {
+    border: 1px solid #ccc;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: white;
+  }
+  
+  .user-table td {
+    border: none;
+    position: relative;
+    padding-left: 50% !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .user-table td:before {
+    content: attr(data-label) ": ";
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+    color: #495057;
+  }
+}
