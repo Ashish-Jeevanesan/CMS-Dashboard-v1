@@ -1,7 +1,8 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,11 @@ import { environment } from '../../environments/environment';
 export class SupabaseService {
   private supabase: SupabaseClient | null = null;
   private isBrowser: boolean;
+  private sessionSubject = new BehaviorSubject<Session | null>(null);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     
-    // Only initialize Supabase client in browser environment
     if (this.isBrowser) {
       try {
         this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
@@ -29,6 +30,11 @@ export class SupabaseService {
             }
           }
         });
+
+        this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+          this.sessionSubject.next(session);
+        });
+
       } catch (error) {
         console.error('Failed to initialize Supabase client:', error);
       }
@@ -73,5 +79,9 @@ export class SupabaseService {
   // Helper method to check if Supabase is properly initialized
   isInitialized(): boolean {
     return this.isBrowser && this.supabase !== null;
+  }
+
+  get session$(): Observable<Session | null> {
+    return this.sessionSubject.asObservable();
   }
 }

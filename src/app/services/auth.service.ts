@@ -1,16 +1,15 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, take } from 'rxjs';
 import { SupabaseService } from './supabase.client.service';
 import { UserService, User } from './user.service';
-import { Session, AuthChangeEvent } from '@supabase/supabase-js';
+import { Session } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  private sessionSubject = new BehaviorSubject<Session | null>(null);
   private authInitialized = new BehaviorSubject<boolean>(false);
   private isBrowser: boolean;
 
@@ -24,16 +23,12 @@ export class AuthService {
     if (this.isBrowser) {
       this.initializeAuth();
     } else {
-      // For SSR, auth is considered initialized and there's no session.
       this.authInitialized.next(true);
     }
   }
 
-  private async initializeAuth() {
-    // Listen for auth state changes (fires on load and on login/logout)
-    this.supabaseService.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
-      this.sessionSubject.next(session);
-
+  private initializeAuth() {
+    this.supabaseService.session$.subscribe(async (session: Session | null) => {
       if (session?.user?.email) {
         try {
           const userWithRole = await firstValueFrom(this.userService.getCurrentUserRole(session.user.email));
@@ -70,7 +65,7 @@ export class AuthService {
   }
 
   get session$(): Observable<Session | null> {
-    return this.sessionSubject.asObservable();
+    return this.supabaseService.session$;
   }
 
   get authInitialized$(): Observable<boolean> {
@@ -84,12 +79,14 @@ export class AuthService {
 
   // Get current session synchronously
   getCurrentSession(): Session | null {
-    return this.sessionSubject.value;
+    let session: Session | null = null;
+    this.supabaseService.session$.pipe(take(1)).subscribe(s => session = s);
+    return session;
   }
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return this.sessionSubject.value !== null;
+    return this.getCurrentSession() !== null;
   }
 
   // Check if current user is admin
@@ -128,7 +125,6 @@ export class AuthService {
   async logout() {
     const result = await this.supabaseService.auth.signOut();
     this.currentUserSubject.next(null);
-    this.sessionSubject.next(null);
     return result;
   }
 }
