@@ -1,0 +1,40 @@
+<div class="dialog-overlay" *ngIf="isOpen" (click)="closeDialog()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Edit Access Permissions</h2>
+      <button class="close-button" (click)="closeDialog()">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="permissions-grid">
+        <div class="header-row">
+          <div class="module-header">Module</div>
+          <div class="permission-header">Read</div>
+          <div class="permission-header">Write</div>
+          <div class="permission-header">Delete</div>
+        </div>
+        <div class="module-row" *ngFor="let module of modules">
+          <div class="module-name">{{ module | titlecase }}</div>
+          <div class="permission-cell">
+            <input type="checkbox"
+                   [checked]="accessMap[module] && accessMap[module].read"
+                   (change)="updatePermission(module, 'read', $event)">
+          </div>
+          <div class="permission-cell">
+            <input type="checkbox"
+                   [checked]="accessMap[module] && accessMap[module].write"
+                   (change)="updatePermission(module, 'write', $event)">
+          </div>
+          <div class="permission-cell">
+            <input type="checkbox" 
+                   [checked]="accessMap[module] && accessMap[module].delete"
+                   (change)="updatePermission(module, 'delete', $event)">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="cancel-button" (click)="closeDialog()">Cancel</button>
+      <button class="save-button" (click)="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+</div>

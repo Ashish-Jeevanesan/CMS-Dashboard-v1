@@ -14,6 +14,16 @@ export interface Church {
   isActive?: boolean;
 }
 
+export interface AccessPermissions {
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+}
+
+export interface AccessMap {
+  [key: string]: AccessPermissions;
+}
+
 export interface User {
   userId: number;
   userName: string;
@@ -22,7 +32,8 @@ export interface User {
   userEmail: string;
   userRole?: number;
   role?: Role;
-  church?: Church;  // Add this line
+  church?: Church;
+  accessMap?: AccessMap;
 }
 
 @Injectable({
@@ -231,6 +242,20 @@ export class UserService {
       };
     } catch (error) {
       console.error('Error fetching current user role from Supabase:', error);
+      throw error;
+    }
+  }
+
+  async updateUserAccess(userId: number, accessMap: AccessMap): Promise<void> {
+    try {
+      const { error } = await this.supabase
+        .from('o102_user')
+        .update({ access_map: accessMap })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating user access:', error);
       throw error;
     }
   }

@@ -268,6 +268,49 @@
   cursor: not-allowed;
 }
 
+/* Access Summary Styles */
+.access-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.access-summary.clickable {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.access-summary.clickable:hover {
+  color: #4299e1;
+}
+
+.access-text {
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.edit-access-btn {
+  background: none;
+  border: none;
+  color: #4299e1;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.access-summary:hover .edit-access-btn {
+  opacity: 1;
+}
+
+.edit-access-btn:hover {
+  color: #3182ce;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .user-table {

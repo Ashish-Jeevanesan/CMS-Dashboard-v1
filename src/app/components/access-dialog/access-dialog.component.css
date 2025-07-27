@@ -1,0 +1,187 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  transform: translateY(0);
+  animation: dialog-slide-in 0.3s ease-out;
+}
+
+@keyframes dialog-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dialog-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #4a5568;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #2d3748;
+}
+
+.dialog-body {
+  padding: 1.5rem;
+}
+
+.permissions-grid {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header-row, .module-row {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  align-items: center;
+}
+
+.header-row {
+  background: #f7fafc;
+  border-bottom: 2px solid #e2e8f0;
+  font-weight: 600;
+}
+
+.module-header, .permission-header, .module-name, .permission-cell {
+  padding: 1rem;
+  text-align: center;
+}
+
+.module-header {
+  text-align: left;
+}
+
+.module-name {
+  text-align: left;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.permission-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.permission-cell input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.permission-cell input[type="checkbox"]:checked {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}
+
+.permission-cell input[type="checkbox"]:hover {
+  border-color: #4299e1;
+}
+
+.module-row:not(:last-child) {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dialog-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.cancel-button, .save-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-button {
+  background-color: #edf2f7;
+  color: #4a5568;
+  border: none;
+}
+
+.save-button {
+  background-color: #4299e1;
+  color: white;
+  border: none;
+}
+
+.cancel-button:hover {
+  background-color: #e2e8f0;
+}
+
+.save-button:hover {
+  background-color: #3182ce;
+}
+
+@media (max-width: 640px) {
+  .dialog-content {
+    width: 95%;
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  .permissions-grid {
+    font-size: 0.875rem;
+  }
+
+  .module-header, .permission-header, .module-name, .permission-cell {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .permission-cell input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+  }
+}

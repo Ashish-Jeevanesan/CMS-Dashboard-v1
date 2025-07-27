@@ -1,5 +1,4 @@
 <div class="user-dashboard-container">
-  <div class="dashboard-header">
     <h2>User Management</h2>
     <div class="action-buttons">
       <button (click)="loadUsers()" class="refresh-btn" [class.rotating]="loading">
@@ -36,36 +35,71 @@
           <th>Last Name</th>
           <th>Email</th>
           <th>Role</th>
-          <th>Mapped Church</th> <!-- Add this line -->
+          <th>Mapped Church</th>
+          <th>Access Permissions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users" [class.updating]="updatingUserId === user.userId">
           <td>{{ user.userId }}</td>
           <td>{{ user.userName }}</td>
           <td>{{ user.userFName }}</td>
           <td>{{ user.userLName || 'N/A' }}</td>
           <td>{{ user.userEmail }}</td>
+          <td>{{ user.role?.roleName || 'N/A' }}</td>
+          <td>{{ user.church?.churchName || 'N/A' }}</td>
           <td>
-            <span [ngClass]="user.role?.roleName === 'ADMIN' ? 'role-admin' : 'role-user'">
-              {{ user.role?.roleName || 'No Role' }}
-            </span>
+            <ng-container *ngIf="editAccessUserId === user.userId; else viewAccessMap">
+              <table class="access-map-table">
+                <thead>
+                  <tr>
+                    <th>Module</th>
+                    <th>Read</th>
+                    <th>Write</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let module of ['sermons', 'announcements', 'events']" >
+                    <td>{{ module }}</td>
+                    <td><input type="checkbox" [(ngModel)]="editableAccessMap![module].read"></td>
+                    <td><input type="checkbox" [(ngModel)]="editableAccessMap![module].write"></td>
+                    <td><input type="checkbox" [(ngModel)]="editableAccessMap![module].delete"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+            <ng-template #viewAccessMap>
+              <table class="access-map-table">
+                <thead>
+                  <tr>
+                    <th>Module</th>
+                    <th>R</th>
+                    <th>W</th>
+                    <th>D</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let module of ['sermons', 'announcements', 'events']">
+                    <td>{{ module }}</td>
+                    <td><span [class.enabled]="user.accessMap![module].read">✔</span></td>
+                    <td><span [class.enabled]="user.accessMap![module].write">✔</span></td>
+                    <td><span [class.enabled]="user.accessMap![module].delete">✔</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
           </td>
-          <td [class.updating]="updatingUserId === user.userId">
-            <select *ngIf="isAdmin" 
-                    [ngModel]="user.church?.churchId"
-                    (ngModelChange)="updateUserChurch(user.userId, $event)"
-                    [disabled]="updatingUserId === user.userId"
-                    class="church-select">
-              <option [ngValue]="null">Not Mapped</option>
-              <option *ngFor="let church of churches" 
-                      [ngValue]="church.churchId">
-                {{church.churchName}}
-              </option>
-            </select>
-            <span *ngIf="!isAdmin">{{ user.church?.churchName || 'Not Mapped' }}</span>
-            <div *ngIf="updatingUserId === user.userId" class="loader"></div>
-          </td> <!-- Add this line -->
+          <td>
+            <ng-container *ngIf="editAccessUserId === user.userId; else editButton">
+              <button class="save-btn" (click)="saveAccessMap(user)">Save</button>
+              <button class="cancel-btn" (click)="cancelEditAccess()">Cancel</button>
+            </ng-container>
+            <ng-template #editButton>
+              <button class="edit-btn" (click)="startEditAccess(user)" *ngIf="isAdmin">Edit</button>
+            </ng-template>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -74,4 +108,11 @@
       No users found.
     </div>
   </div>
-</div>
+
+  <app-access-dialog
+    *ngIf="showAccessDialog"
+    [isOpen]="showAccessDialog"
+    [accessMap]="selectedUserAccess!"
+    (close)="closeAccessDialog()"
+    (save)="saveAccessChanges($event)">
+  </app-access-dialog>
