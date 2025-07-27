@@ -4,61 +4,72 @@
   <img src="https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white" alt="Angular"/>
   <img src="https://img.shields.io/badge/supabase-%233ECF8E.svg?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
   <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"/>
+  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
 </p>
 
 ## 📖 About The Project
 
-A simple dashboard for managing content for a church. This project is built with Angular and uses Supabase for the backend.
+A comprehensive dashboard for managing church-related content. Built with Angular and powered by Supabase for backend services, this application provides a modern and efficient way to manage church information with server-side rendering capabilities.
 
 ## ✨ Features
 
-*   **User Authentication:** 🔐 Users can sign up and log in to the dashboard.
-*   **Church Management:** ⛪ Authenticated users can add, edit, and delete church information.
-*   **Dashboard:** 📊 A dashboard to display a list of churches.
+* **User Authentication:** 🔐 Secure login and signup functionality
+* **Church Management:** ⛪ Complete CRUD operations for church information
+* **Dashboard Interface:** 📊 Modern, responsive dashboard layout
+* **Server-Side Rendering:** 🚀 Enhanced performance with Angular Universal
+* **Role-Based Access:** 👥 User role management and authorization
 
 ## 🚀 Getting Started
 
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
-*   Node.js and npm
-*   Angular CLI
+* Node.js and npm
+* Angular CLI version 18.x
+* A Supabase account and project
 
 ### Installation
 
-1.  Clone the repo
-    ```sh
-    git clone https://github.com/your_username_/Project-Name.git
-    ```
-2.  Install NPM packages
-    ```sh
-    npm install
-    ```
-3.  **Environment Configuration:**
-    
-    **For Development:**
-    - The app uses the credentials in [`src/environments/environment.ts`](src/environments/environment.ts)
-    - Replace the default Supabase URL and key with your own credentials
-    
-    **For Production:**
-    - Update [`src/environments/environment.prod.ts`](src/environments/environment.prod.ts) with your production credentials
-    - Use Angular's environment file replacement during build process
-    
-    **Optional:** You can also create a `.env` file for documentation purposes:
-    ```
-    SUPABASE_URL=your_supabase_project_url_here
-    SUPABASE_ANON_KEY=your_supabase_anon_key_here
-    ```
-4.  Start the development server
-    ```sh
-    npm start
-    ```
+1. Clone the repository
+```sh
+git clone https://github.com/your_username_/CMS-Dashboard-v1.git
+```
+
+2. Install NPM packages
+```sh
+npm install
+```
+
+3. Configure Environment
+   * Create environment files in `src/environments/`
+   * Update Supabase credentials in your environment files
+   * Optional: Create a `.env` file with:
+```sh
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Start Development Server
+```sh
+npm start
+```
+Visit `http://localhost:4200/`
+
+## 🛠️ Tech Stack
+
+* **Frontend:** Angular 18
+* **Backend:** Supabase
+* **Server:** Node.js with Express (SSR)
+* **Language:** TypeScript
+* **Styling:** CSS with responsive design
 
 ## ✍️ Author
 
-*   **Ashish Jeevanesan**
+* **Ashish Jeevanesan** 
 
 ## 🤝 Contributors
 
 This project is maintained by the **CMS group**.
+
+## 📝 License
+
+This project is licensed under the MIT License.
