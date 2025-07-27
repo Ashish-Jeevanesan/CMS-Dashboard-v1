@@ -8,6 +8,12 @@ export interface Role {
   roleDescription?: string;
 }
 
+export interface Church {
+  churchId: number;
+  churchName: string;
+  isActive?: boolean;
+}
+
 export interface User {
   userId: number;
   userName: string;
@@ -16,6 +22,7 @@ export interface User {
   userEmail: string;
   userRole?: number;
   role?: Role;
+  church?: Church;  // Add this line
 }
 
 @Injectable({
@@ -49,10 +56,36 @@ export class UserService {
     return user?.role?.roleName?.toUpperCase() === 'ADMIN';
   }
 
+  getActiveChurches(): Observable<Church[]> {
+    return from(this.fetchActiveChurches());
+  }
+
+  async updateUserChurch(userId: number, churchId: number): Promise<User | null> {
+    console.log(`Updating user ${userId} with church ${churchId}`);
+    const { data, error } = await this.supabase
+      .from('o102_user')
+      .update({ church_id: churchId })
+      .eq('user_id', userId)
+      .select(); // Select the church details if needed
+
+    if (error) {
+      console.error('Error updating user church:', error);
+      throw error;
+    }
+    return data && data.length > 0 ? {
+      userId: data[0].user_id,
+      userName: data[0].user_name, // Assuming these fields are returned or can be defaulted
+      userFName: data[0].user_f_name,
+      userLName: data[0].user_l_name || null, // Ensure userLName is included
+      userEmail: data[0].user_email,
+      userRole: data[0].user_role, // Ensure userRole is included
+      church: { churchId: data[0].church_id, churchName: data[0].church_name || '' } } : null;
+  }
+
   private async fetchUsers(): Promise<User[]> {
     try {
       const { data, error } = await this.supabase
-        .from('o102_user') // Fetch all users from the o102_user table
+        .from('o102_user')
         .select(`
           user_id,
           user_name,
@@ -63,18 +96,19 @@ export class UserService {
           o103_roles!user_role (
             role_id,
             role_nm
+          ),
+          o101_church!church_id (
+            church_id,
+            church_name
           )
         `)
-        .order('user_id', { ascending: true }); // Order by user_id for consistent results
+        .order('user_id', { ascending: true });
       
       if (error) {
         console.error('Supabase error:', error);
         throw error;
       }
       
-      console.log('Fetched users data with roles:', data); // Debug log
-      
-      // Map Supabase fields to User interface
       return (data ?? []).map((item: any) => ({
         userId: item.user_id,
         userName: item.user_name || 'N/A',
@@ -85,6 +119,10 @@ export class UserService {
         role: item.o103_roles ? {
           roleId: item.o103_roles.role_id,
           roleName: item.o103_roles.role_nm
+        } : undefined,
+        church: item.o101_church ? {
+          churchId: item.o101_church.church_id,
+          churchName: item.o101_church.church_name
         } : undefined
       }));
     } catch (error) {
@@ -193,6 +231,26 @@ export class UserService {
       };
     } catch (error) {
       console.error('Error fetching current user role from Supabase:', error);
+      throw error;
+    }
+  }
+
+  private async fetchActiveChurches(): Promise<Church[]> {
+    try {
+      const { data, error } = await this.supabase
+        .from('o101_church')
+        .select('church_id, church_name')
+        .eq('active_fl', 'Y')
+        .order('church_name');
+
+      if (error) throw error;
+
+      return data.map((church: any) => ({
+        churchId: church.church_id,
+        churchName: church.church_name
+      }));
+    } catch (error) {
+      console.error('Error fetching churches:', error);
       throw error;
     }
   }

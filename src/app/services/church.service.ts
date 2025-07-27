@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { SupabaseService } from './supabase.client.service';
 
 export interface Church {
-  name: any;
   id: number;
+  name: string;
   city: string;
   state: string;
   country: string;
   status: string;
+  isActive: boolean;  // Add this line
 }
 
 @Injectable({
@@ -21,16 +22,18 @@ export class ChurchService {
   async getChurches(payload: { city: string; state: string; }) {
     const { data, error } = await this.supabase
       .from('o101_church')
-      .select('church_name, church_id, church_city, church_state, church_country, status');
+      .select('church_name, church_id, church_city, church_state, church_country, status, active_fl');
+    
     if (error) throw error;
-    // Map DB fields to your Church interface
+    
     return (data ?? []).map((item: any) => ({
       name: item.church_name,
       id: item.church_id,
       city: item.church_city,
       state: item.church_state,
       country: item.church_country,
-      status: item.status
+      status: item.status,
+      isActive: item.active_fl
     }));
   }
 
@@ -48,6 +51,21 @@ export class ChurchService {
     if (!data || data.length === 0) {
       throw new Error(`No church found with id ${id}`);
     }
+    return data;
+  }
+
+  async updateChurchActive(id: number, isActive: boolean) {
+    const { data, error } = await this.supabase
+      .from('o101_church')
+      .update({
+        active_fl: isActive ? 'Y' : 'N',
+        last_updated_by: 2,
+        last_updated_date: new Date().toISOString()
+      })
+      .eq('church_id', id)
+      .select();
+
+    if (error) throw error;
     return data;
   }
 }

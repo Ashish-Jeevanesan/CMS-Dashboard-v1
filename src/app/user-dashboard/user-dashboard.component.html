@@ -1,11 +1,29 @@
 <div class="user-dashboard-container">
-  <h2>User Management</h2>
+  <div class="dashboard-header">
+    <h2>User Management</h2>
+    <div class="action-buttons">
+      <button (click)="loadUsers()" class="refresh-btn" [class.rotating]="loading">
+        <i class="fas fa-sync-alt"></i>
+        Refresh Users
+      </button>
+    </div>
+  </div>
   
-  <div *ngIf="loading" class="loading">Loading users...</div>
+  <div *ngIf="loading" class="loading-container">
+    <div class="loader"></div>
+    <span>Loading users...</span>
+  </div>
+  
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
   
   <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
     {{ errorMessage }}
-    <button (click)="loadUsers()" class="retry-btn">Retry</button>
+    <button (click)="loadUsers()" class="retry-btn">
+      <i class="fas fa-redo"></i> Retry
+    </button>
   </div>
   
   <div *ngIf="!loading && !errorMessage">
@@ -18,6 +36,7 @@
           <th>Last Name</th>
           <th>Email</th>
           <th>Role</th>
+          <th>Mapped Church</th> <!-- Add this line -->
         </tr>
       </thead>
       <tbody>
@@ -32,6 +51,21 @@
               {{ user.role?.roleName || 'No Role' }}
             </span>
           </td>
+          <td [class.updating]="updatingUserId === user.userId">
+            <select *ngIf="isAdmin" 
+                    [ngModel]="user.church?.churchId"
+                    (ngModelChange)="updateUserChurch(user.userId, $event)"
+                    [disabled]="updatingUserId === user.userId"
+                    class="church-select">
+              <option [ngValue]="null">Not Mapped</option>
+              <option *ngFor="let church of churches" 
+                      [ngValue]="church.churchId">
+                {{church.churchName}}
+              </option>
+            </select>
+            <span *ngIf="!isAdmin">{{ user.church?.churchName || 'Not Mapped' }}</span>
+            <div *ngIf="updatingUserId === user.userId" class="loader"></div>
+          </td> <!-- Add this line -->
         </tr>
       </tbody>
     </table>

@@ -17,6 +17,9 @@ export class ChurchListComponent implements OnInit {
   churches: Church[] = [];
   selectedChurchId!: number;
   loading = false;
+  updatingChurchId: number | null = null;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
 
   constructor(
     private churchService: ChurchService,
@@ -104,6 +107,33 @@ export class ChurchListComponent implements OnInit {
     } catch (error) {
       console.error('Error updating church status:', error);
       alert('Failed to update church status. Please try again.');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async updateChurchActive(churchId: number, event: Event) {
+    if (!this.isAdmin()) {
+      return;
+    }
+
+    const checkbox = event.target as HTMLInputElement;
+    try {
+      this.loading = true;
+      await this.churchService.updateChurchActive(churchId, checkbox.checked);
+      
+      // Update local state
+      const church = this.churches.find(c => c.id === churchId);
+      if (church) {
+        church.isActive = checkbox.checked;
+      }
+      
+      console.log(`Church ${churchId} active status updated to ${checkbox.checked}`);
+    } catch (error) {
+      console.error('Error updating church active status:', error);
+      // Revert checkbox state on error
+      checkbox.checked = !checkbox.checked;
+      alert('Failed to update church active status. Please try again.');
     } finally {
       this.loading = false;
     }

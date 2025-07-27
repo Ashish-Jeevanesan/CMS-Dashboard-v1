@@ -5,19 +5,36 @@
 </div>
 
 <div class="church-list-container">
-  <h2 class="title">Churches</h2>
-  <div *ngIf="loading" class="loading">Loading...</div>
-  <table class="church-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>City</th>
-        <th>State</th>
-        <th>Country</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+  <div class="header-section">
+    <h2 class="title">Churches</h2>
+    <div class="filter-section">
+      <input [(ngModel)]="city" placeholder="Enter City" class="filter-input" />
+      <input [(ngModel)]="state" placeholder="Enter State" class="filter-input" />
+      <button (click)="fetchChurches()" class="action-button">
+        <i class="fas fa-sync-alt" [class.rotating]="loading"></i>
+        Load Churches
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="loader"></div>
+    <span>Loading churches...</span>
+  </div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table class="church-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Country</th>
+          <th>Status</th>
+          <th>Active</th>
+          <th>Action</th>
+        </tr>
+      </thead>
     <tbody>
       <tr *ngFor="let church of churches">
         <td>{{ church.name }}</td>
@@ -28,6 +45,17 @@
           <span [ngClass]="church.status === 'Approved' ? 'approved' : 'pending'">
             {{ church.status === 'Approved' ? 'Approved' : 'Pending Approval' }}
           </span>
+        </td>
+        <td>
+          <div class="checkbox-wrapper">
+            <input type="checkbox"
+                   [checked]="church.isActive"
+                   (change)="updateChurchActive(church.id, $event)"
+                   [disabled]="!isAdmin()"
+                   class="church-active-checkbox"
+                   [id]="'church-active-' + church.id">
+            <label [for]="'church-active-' + church.id" class="checkbox-label"></label>
+          </div>
         </td>
         <td>
           <div *ngIf="canManageChurches(); else noPermission">
