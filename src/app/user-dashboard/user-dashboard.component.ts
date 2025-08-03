@@ -1,13 +1,26 @@
 import { Component, inject, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User, UserService, Church } from '../services/user.service';
+import { User, UserService, Church, AccessMap, AccessPermissions } from '../services/user.service';
+import { AccessDialogComponent } from '../components/access-dialog/access-dialog.component';
 
 import { AuthService } from '../services/auth.service';
+
+const DEFAULT_MODULES = ['sermons', 'announcements', 'events'];
+const DEFAULT_PERMISSIONS = { read: false, write: false, delete: false };
+
+function ensureAccessMap(map: AccessMap | undefined | null): AccessMap {
+  const result: AccessMap = {};
+  for (const module of DEFAULT_MODULES) {
+    result[module] = map?.[module] || { ...DEFAULT_PERMISSIONS };
+  }
+  return result;
+}
+
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AccessDialogComponent],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css']
 })
@@ -19,6 +32,12 @@ export class UserDashboardComponent implements OnInit {
   successMessage: string | null = null;
   isAdmin = false;
   updatingUserId: number | null = null;
+  showAccessDialog = false;
+  selectedUserAccess: AccessMap | undefined;
+  selectedUserId: number | null = null;
+  editAccessUserId: number | null = null;
+  editableAccessMap: AccessMap | null = null;
+
   private userService = inject(UserService);
   private authService = inject(AuthService);
 
@@ -42,7 +61,10 @@ export class UserDashboardComponent implements OnInit {
     
     this.userService.getUsers().subscribe({
       next: (data: User[]) => {
-        this.users = data;
+        this.users = data.map(user => ({
+          ...user,
+          accessMap: ensureAccessMap(user.accessMap)
+        }));
         this.loading = false;
       },
       error: (error: any) => {
@@ -88,5 +110,47 @@ export class UserDashboardComponent implements OnInit {
       .finally(() => {
         this.updatingUserId = null;
       });
+  }
+
+  startEditAccess(user: User) {
+    this.editAccessUserId = user.userId;
+    this.editableAccessMap = ensureAccessMap(user.accessMap);
+  }
+
+  cancelEditAccess() {
+    this.editAccessUserId = null;
+    this.editableAccessMap = null;
+  }
+
+  saveAccessMap(user: User) {
+    if (!this.editableAccessMap) return;
+    this.userService.updateUserAccess(user.userId, this.editableAccessMap)
+      .then(() => {
+        user.accessMap = JSON.parse(JSON.stringify(this.editableAccessMap));
+        this.successMessage = 'Access permissions updated!';
+        setTimeout(() => this.successMessage = null, 2000);
+        this.cancelEditAccess();
+      })
+      .catch(err => {
+        this.errorMessage = 'Failed to update access permissions.';
+        setTimeout(() => this.errorMessage = null, 2000);
+      });
+  }
+
+  togglePermission(module: keyof AccessMap, perm: keyof AccessPermissions) {
+    if (!this.editableAccessMap) return;
+    this.editableAccessMap[module][perm] = !this.editableAccessMap[module][perm];
+  }
+
+  closeAccessDialog() {
+    this.showAccessDialog = false;
+  }
+
+  saveAccessChanges(updatedAccessMap: AccessMap) {
+    // Implement logic to update the user's access map
+    // For example:
+    this.selectedUserAccess = updatedAccessMap;
+    this.showAccessDialog = false;
+    // Possibly call a service to persist the changes
   }
 }

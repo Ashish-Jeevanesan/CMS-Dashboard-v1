@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Observable, from, last } from 'rxjs';
 import { SupabaseService } from './supabase.client.service';
 
 export interface Role {
@@ -14,6 +14,16 @@ export interface Church {
   isActive?: boolean;
 }
 
+export interface AccessPermissions {
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+}
+
+export interface AccessMap {
+  [key: string]: AccessPermissions;
+}
+
 export interface User {
   userId: number;
   userName: string;
@@ -22,7 +32,8 @@ export interface User {
   userEmail: string;
   userRole?: number;
   role?: Role;
-  church?: Church;  // Add this line
+  church?: Church;
+  accessMap?: AccessMap;
 }
 
 @Injectable({
@@ -233,6 +244,35 @@ export class UserService {
       console.error('Error fetching current user role from Supabase:', error);
       throw error;
     }
+  }
+
+  async updateUserAccess(userId: number, accessMap: AccessMap): Promise<void> {
+    // Need to get the user ID for last update by from session or context.
+    try {
+      console.log(`Updating access for user ${userId}`, accessMap); // Debug log
+      const { data,error } = await this.supabase
+        .from('o102_user')
+        .update({ access_map: accessMap },
+          { last_updated_by: 2, // Assuming 2 is the ID of the user performing the action
+            last_updated_date: new Date().toISOString()
+          }
+        )
+        .eq('user_id', userId)
+        .select(); // Select to ensure the update is applied
+
+      if (error) throw error;
+
+      if(data && data.length > 0) {
+      console.log(`User ${userId} access updated successfully with data:`, data);
+      } else {
+        console.warn(`No data returned for user ${userId} after access update.`);
+      }
+
+    } catch (error) {
+      console.error('Error updating user access:', error);
+      throw error;
+    }
+    
   }
 
   private async fetchActiveChurches(): Promise<Church[]> {
